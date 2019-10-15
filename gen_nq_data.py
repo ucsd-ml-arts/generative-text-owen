@@ -40,7 +40,7 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 answer = answer.replace(" ''", '"')
                 for char in ('(',):
                     answer = answer.replace(char + ' ', char)
-                for char in ('.', "'", ';', ')', ','):
+                for char in ('.', "'", ';', ')', ':', ','):
                     answer = answer.replace(' ' + char, char)
                 if len(answer) > 1:
                     writer.write('%s\n%s\n' % (answer, q_text))  # answer-question
