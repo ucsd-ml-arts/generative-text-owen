@@ -9,3 +9,4 @@ im2txt*/
 __pycache__/
 !tensorflow/models/
 images/
+visual-questioner-env/
