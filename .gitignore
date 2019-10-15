@@ -8,3 +8,4 @@ samples/
 im2txt*/
 __pycache__/
 !tensorflow/models/
+images/
