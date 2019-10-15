@@ -1,0 +1,6 @@
+checkpoint/
+.ipynb_checkpoints/
+nq_data.txt
+nq_data_20k.txt
+models/
+samples/
