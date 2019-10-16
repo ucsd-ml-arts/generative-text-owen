@@ -8,6 +8,7 @@ from __future__ import division, unicode_literals, print_function, absolute_impo
 
 import os
 import sys
+import yaml
 import platform
 from PySide2 import QtGui, QtCore, QtWidgets
 
@@ -68,8 +69,9 @@ class WindowWidget(QtWidgets.QWidget):
         gpt2.load_gpt2(self.sess)
 
     def prepare_captioner(self):
-        checkpoint_path = '/home/owen/workspace/visual-questioner/im2txt/model.ckpt-2000000'
-        vocab_file_path = '/home/owen/workspace/visual-questioner/im2txt/word_counts.txt'
+        config = yaml.load(open('config.yaml', 'r'))
+        checkpoint_path = os.path.join(config['project_root_dir'], config['checkpoint_path'])
+        vocab_file_path = os.path.join(config['project_root_dir'], config['vocab_file_path'])
         self.captioner = Captioner(self.sess, checkpoint_path, vocab_file_path)
     
     def load_button_clicked(self):
