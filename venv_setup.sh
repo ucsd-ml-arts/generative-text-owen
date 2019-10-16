@@ -8,6 +8,8 @@ source ./visual-questioner-env/bin/activate
 if [ "$(uname)" == "Darwin" ]; then
   brew install libffi
 else
+  sudo apt-get update
+  sudo apt-get install qt5-default
   sudo apt-get install libffi6 libffi-dev
 fi
 
