@@ -1,5 +1,6 @@
 import argparse
 import jsonlines
+from preprocess_utils import first_letter_lowercase
 
 def parse_answer(document_text, answer_candidate):
     tokens = document_text.split(' ')
@@ -18,9 +19,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
             # question
             q_text = q_data['question_text'].strip()
             if not q_text.endswith('?'):
-                q_text += '?'
-            if not q_text[0].isupper():
-                q_text = q_text[0].upper() + q_text[1:]
+                q_text += ' ?'
+            q_text = first_letter_lowercase(q_text)
             # answer
             annotations = q_data['annotations']
             answer_candidates = q_data['long_answer_candidates']
@@ -35,13 +35,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 answer = answer.replace('<P>', '').replace('</P>', '')
                 # strip to single sentence
                 answer = answer[:answer.find('.')+1].strip()
-                # get rid of some of the spaces around punctuation
-                answer = answer.replace('`` ', '"')
-                answer = answer.replace(" ''", '"')
-                for char in ('(',):
-                    answer = answer.replace(char + ' ', char)
-                for char in ('.', "'", ';', ')', ':', ','):
-                    answer = answer.replace(' ' + char, char)
+                # convert first letter to lowercase
+                answer = first_letter_lowercase(answer)
                 if len(answer) > 1:
                     writer.write('%s\n%s\n' % (answer, q_text))  # answer-question
                     questions_written += 1

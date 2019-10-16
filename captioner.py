@@ -11,6 +11,7 @@ import tensorflow as tf
 from im2txt import configuration
 from im2txt import inference_wrapper
 from im2txt.inference_utils import vocabulary
+from preprocess_utils import first_letter_lowercase
 from im2txt.inference_utils import caption_generator
 
 class Captioner:
@@ -43,7 +44,4 @@ class Captioner:
     @staticmethod
     def postprocess(sentence):
         sentence = sentence.strip()
-        if len(sentence) > 0:
-            # Capitalize first letter.
-            sentence = sentence[0].upper() + sentence[1:]
-        return sentence
+        return first_letter_lowercase(sentence)

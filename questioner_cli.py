@@ -16,7 +16,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 def main(image_path):
     sess = gpt2.start_tf_sess()
     gpt2.load_gpt2(sess)
-    config = yaml.load(open('config.yaml', 'r'))
+    config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
     checkpoint_path = os.path.join(config['project_root_dir'], config['checkpoint_path'])
     vocab_file_path = os.path.join(config['project_root_dir'], config['vocab_file_path'])
     captioner = Captioner(sess, checkpoint_path, vocab_file_path)

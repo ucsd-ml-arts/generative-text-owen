@@ -69,7 +69,7 @@ class WindowWidget(QtWidgets.QWidget):
         gpt2.load_gpt2(self.sess)
 
     def prepare_captioner(self):
-        config = yaml.load(open('config.yaml', 'r'))
+        config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
         checkpoint_path = os.path.join(config['project_root_dir'], config['checkpoint_path'])
         vocab_file_path = os.path.join(config['project_root_dir'], config['vocab_file_path'])
         self.captioner = Captioner(self.sess, checkpoint_path, vocab_file_path)
