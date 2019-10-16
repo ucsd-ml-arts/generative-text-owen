@@ -15,13 +15,21 @@ op_sys = platform.system()
 if op_sys == 'Darwin':
     from Foundation import NSURL
 
+import gpt_2_simple as gpt2
+from captioner import Captioner
+from postprocess_utils import gpt2_gen_questions
+
 class WindowWidget(QtWidgets.QWidget):
     def __init__(self):
         super(WindowWidget, self).__init__()
-        layout = QtWidgets.QHBoxLayout()
+        self.sess = None
+        self.captioner = None
+        self.prepare_questioner()
+        self.prepare_captioner()
 
         # Viewing region
         self.viewing_region = QtWidgets.QLabel(self)
+        layout = QtWidgets.QHBoxLayout()
         layout.addWidget(self.viewing_region)
 
         # Load button
@@ -51,6 +59,15 @@ class WindowWidget(QtWidgets.QWidget):
         self.setLayout(layout)
         self.setAcceptDrops(True)
         self.show()
+
+    def prepare_questioner(self):
+        self.sess = gpt2.start_tf_sess()
+        gpt2.load_gpt2(self.sess)
+
+    def prepare_captioner(self):
+        checkpoint_path = '/home/owen/workspace/visual-questioner/im2txt/model.ckpt-2000000'
+        vocab_file_path = '/home/owen/workspace/visual-questioner/im2txt/word_counts.txt'
+        self.captioner = Captioner(self.sess, checkpoint_path, vocab_file_path)
     
     def load_button_clicked(self):
         image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file')
@@ -60,6 +77,12 @@ class WindowWidget(QtWidgets.QWidget):
         pixmap = QtGui.QPixmap(image_path)
         pixmap = pixmap.scaled(500, 500, QtCore.Qt.KeepAspectRatio)
         self.viewing_region.setPixmap(pixmap)
+
+        caption = self.captioner.caption(image_path)
+        questions = gpt2_gen_questions(
+            self.sess, caption, nsamples=1, temperature=0.7)
+        if len(questions) > 0:
+            self.text_region.setText(questions[0])
     
     def dragEnterEvent(self, evt):
         if evt.mimeData().hasUrls:

@@ -37,4 +37,13 @@ class Captioner:
         if len(captions) == 0:
             return ''
         sentence = captions[0].sentence[1:-1]
-        return ' '.join([self.vocab.id_to_word(w) for w in sentence]).strip()
+        sentence = ' '.join([self.vocab.id_to_word(w) for w in sentence])
+        return self.postprocess(sentence)
+
+    @staticmethod
+    def postprocess(sentence):
+        sentence = sentence.strip()
+        if len(sentence) > 0:
+            # Capitalize first letter.
+            sentence = sentence[0].upper() + sentence[1:]
+        return sentence
