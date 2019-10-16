@@ -7,6 +7,6 @@ models/
 samples/
 im2txt*/
 __pycache__/
-!tensorflow/models/
+!vtensorflow/models/
 images/
 visual-questioner-env/
