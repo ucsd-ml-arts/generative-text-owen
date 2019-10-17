@@ -10,4 +10,5 @@ preprocess:
   only_ending_spaces: True
   punctuation_spaces_except_questions: False
 
+drop_non_ascii: True
 drop_punctuated_questions: True

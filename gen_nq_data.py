@@ -3,6 +3,9 @@ import argparse
 import jsonlines
 from preprocess_utils import preprocess_input
 
+def is_ascii(text):
+    return len(text) == len(text.encode())
+
 def parse_answer(document_text, answer_candidate):
     tokens = document_text.split(' ')
     start  = answer_candidate['start_token']
@@ -27,6 +30,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 illegal_punctuation = ('.', '``', "''", '"', ':', ';', '(', ')')
                 if any(punc in q_text for punc in illegal_punctuation):
                     continue
+            if config['drop_non_ascii'] and not is_ascii(q_text):
+                continue
             if not q_text.endswith('?'):
                 q_text += '?'
             q_preprocess_options = preprocess_options.copy()
@@ -42,6 +47,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 answer = parse_answer(q_data['document_text'], annotation['long_answer'])
             elif len(answer_candidates) > 0:
                 answer = parse_answer(q_data['document_text'], answer_candidates[-1])
+            if config['drop_non_ascii'] and not is_ascii(answer):
+                continue
             if answer.startswith('<P>'):
                 # only accept paragraph answers
                 answer = answer.replace('<P>', '').replace('</P>', '')
