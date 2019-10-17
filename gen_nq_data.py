@@ -23,9 +23,16 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
         for q_data in reader:
             # question
             q_text = q_data['question_text'].strip()
+            if config['drop_punctuated_questions']:
+                illegal_punctuation = ('.', '``', "''", '"', ':', ';', '(', ')')
+                if any(punc in q_text for punc in illegal_punctuation):
+                    continue
             if not q_text.endswith('?'):
                 q_text += '?'
-            q_text = preprocess_input(q_text, preprocess_options)
+            q_preprocess_options = preprocess_options.copy()
+            if q_preprocess_options['punctuation_spaces_except_questions']:
+                q_preprocess_options['punctuation_spaces'] = False
+            q_text = preprocess_input(q_text, q_preprocess_options)
             # answer
             annotations = q_data['annotations']
             answer_candidates = q_data['long_answer_candidates']
