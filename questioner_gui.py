@@ -76,7 +76,8 @@ class WindowWidget(QtWidgets.QWidget):
     
     def load_button_clicked(self):
         image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file')
-        self.load_image(image_path)
+        if image_path:
+            self.load_image(image_path)
     
     def load_image(self, image_path):
         pixmap = QtGui.QPixmap(image_path)
