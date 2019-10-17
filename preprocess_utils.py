@@ -38,6 +38,17 @@ def tokenize_punctuation(text):
         text = re.sub(r'([^\s])%s' % char, r'\1 %s' % repl_char, text)
     return text
 
+def tokenize_ending_punctuation(text):
+    """Add spaces before terminal periods and question marks.
+
+    >>> tokenize_ending_punctuation("jon's quick, red: (fox). lazy; dog?")
+    "jon's quick, red: (fox). lazy; dog ?"
+    """
+    for char in ('\\.', '\\?'):
+        repl_char = char.replace('\\', '')
+        text = re.sub(r'([^\s])%s$' % char, r'\1 %s' % repl_char, text)
+    return text
+
 def reformat_punctuation(text):
     """Get rid of spaces around punctuation.
     Inverse of `preprocess_utils.tokenize_punctuation`."""
@@ -58,7 +69,10 @@ def preprocess_input(text, preprocess_options):
     else:
         text = first_letter_uppercase(text)
     # Add or remove spaces adjacent to punctuation
-    if preprocess_options['punctuation_spaces']:
+    if preprocess_options['only_ending_spaces']:
+        text = reformat_punctuation(text)
+        text = tokenize_ending_punctuation(text)
+    elif preprocess_options['punctuation_spaces']:
         text = tokenize_punctuation(text)
     else:
         text = reformat_punctuation(text)

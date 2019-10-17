@@ -6,7 +6,8 @@ vocab_file_path: im2txt/word_counts.txt
 
 preprocess:
   lowercase: True
-  punctuation_spaces: True
-  punctuation_spaces_except_questions: True
+  punctuation_spaces: False
+  only_ending_spaces: True
+  punctuation_spaces_except_questions: False
 
 drop_punctuated_questions: True
