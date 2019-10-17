@@ -16,6 +16,7 @@ source ./visual-questioner-env/bin/activate
   - Put all files in the `<project root>/im2txt/` directory.
   - Run [this code](https://github.com/tensorflow/models/issues/466#issuecomment-391240675) to fix the checkpoint.
 - Download the simplified training set from the [Natural Questions dataset](https://ai.google.com/research/NaturalQuestions/download).
+- Edit `config.yaml`.
 
 ## 3. Data Generation
 Generate GPT-2 training data with

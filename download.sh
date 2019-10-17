@@ -18,3 +18,6 @@ rm im2txt_2016_10_11.2000000.tar.gz
 cp ../vtensorflow/models/research/im2txt/convert_checkpoint.py .
 python3 convert_checkpoint.py
 cd -
+
+# Edit config file with current working directory.
+python3 update_config.py
