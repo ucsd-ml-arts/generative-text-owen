@@ -1,6 +1,7 @@
+import yaml
 import argparse
 import jsonlines
-from preprocess_utils import first_letter_lowercase
+from preprocess_utils import preprocess_input
 
 def parse_answer(document_text, answer_candidate):
     tokens = document_text.split(' ')
@@ -12,6 +13,10 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
     """Exports simplified NQ data as a .txt file,
     with answers and questions on alternating lines.
     """
+    config = yaml.load(
+        open('config.yaml', 'r'), Loader=yaml.FullLoader)
+    preprocess_options = config['preprocess']
+
     write_mode = 'a' if append else 'w'
     with jsonlines.open(in_path) as reader, open(out_path, write_mode) as writer:
         questions_written = 0
@@ -19,8 +24,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
             # question
             q_text = q_data['question_text'].strip()
             if not q_text.endswith('?'):
-                q_text += ' ?'
-            q_text = first_letter_lowercase(q_text)
+                q_text += '?'
+            q_text = preprocess_input(q_text, preprocess_options)
             # answer
             annotations = q_data['annotations']
             answer_candidates = q_data['long_answer_candidates']
@@ -35,8 +40,7 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 answer = answer.replace('<P>', '').replace('</P>', '')
                 # strip to single sentence
                 answer = answer[:answer.find('.')+1].strip()
-                # convert first letter to lowercase
-                answer = first_letter_lowercase(answer)
+                answer = preprocess_input(answer, preprocess_options)
                 if len(answer) > 1:
                     writer.write('%s\n%s\n' % (answer, q_text))  # answer-question
                     questions_written += 1

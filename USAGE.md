@@ -13,7 +13,7 @@ source ./visual-questioner-env/bin/activate
 
 ## 2. Downloads
 - Download Timur's [pre-trained `im2txt` model](https://drive.google.com/file/d/0Bw6m_66JSYLlRFVKQ2tGcUJaWjA/view) and the corresponding [`word_counts.txt`](https://drive.google.com/file/d/0B0tqC1h-STWAYXlEMV9uZUZ2d28/view).
-  - Put all files in the `im2txt/` directory.
+  - Put all files in the `<project root>/im2txt/` directory.
   - Run [this code](https://github.com/tensorflow/models/issues/466#issuecomment-391240675) to fix the checkpoint.
 - Download the simplified training set from the [Natural Questions dataset](https://ai.google.com/research/NaturalQuestions/download).
 

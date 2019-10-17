@@ -3,3 +3,7 @@ project_root_dir: /home/owen/workspace/visual-questioner
 
 checkpoint_path: im2txt/model.ckpt-2000000
 vocab_file_path: im2txt/word_counts.txt
+
+preprocess:
+  lowercase: True
+  punctuation_spaces: True
