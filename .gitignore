@@ -1,8 +1,6 @@
 checkpoint/
 .ipynb_checkpoints/
-nq_data.txt
-nq_data_20k.txt
-nq_data_50k.txt
+nq_data*.txt
 models/
 samples/
 im2txt*/
@@ -10,3 +8,4 @@ __pycache__/
 !vtensorflow/models/
 images/
 visual-questioner-env/
+cookies.txt
