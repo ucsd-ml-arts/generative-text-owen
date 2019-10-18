@@ -66,6 +66,15 @@ def tokenize_ending_punctuation(text):
         text = re.sub(r'([^\s])%s$' % char, r'\1 %s' % repl_char, text)
     return text
 
+def tokenize_hyphens(text):
+    """
+    >>> tokenize_hyphens('one-two--3')
+    'one - two -- 3'
+    """
+    for s in ('--', '-'):
+        text = re.sub(r'([^\s])%s([^\s])' % s, r'\1 %s \2' % s, text)
+    return text
+
 def reformat_punctuation(text):
     """Get rid of spaces around punctuation.
     Inverse of `preprocess_utils.tokenize_punctuation`."""
@@ -75,6 +84,15 @@ def reformat_punctuation(text):
         text = text.replace(char + ' ', char)
     for char in ('.', "'", ';', ')', ':', '?', ','):
         text = text.replace(' ' + char, char)
+    return text
+
+def reformat_hyphens(text):
+    """
+    >>> reformat_hyphens('one - two -- 3')
+    'one-two--3'
+    """
+    for s in ('-', '--'):
+        text = text.replace(' %s ' % s, s)
     return text
 
 def preprocess_input(text, preprocess_options):
@@ -93,5 +111,10 @@ def preprocess_input(text, preprocess_options):
         text = tokenize_punctuation(text)
     else:
         text = reformat_punctuation(text)
+    # Add or remove spaces around hyphens
+    if preprocess_options['hyphen_spaces']:
+        text = tokenize_hyphens(text)
+    else:
+        text = reformat_hyphens(text)
     # Capitalize "I"
     return capitalize_i(text)

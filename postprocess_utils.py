@@ -2,6 +2,7 @@ import gpt_2_simple as gpt2
 from preprocess_utils import capitalize_i
 from preprocess_utils import first_letter_uppercase
 from preprocess_utils import reformat_punctuation
+from preprocess_utils import reformat_hyphens
 
 def compute_batch_size(nsamples):
     for batch_size in range(64, 0, -1):
@@ -27,10 +28,12 @@ def postprocess_input(sentence):
     """Reformat caption for readability."""
     sentence = first_letter_uppercase(sentence)
     sentence = reformat_punctuation(sentence)
+    sentence = reformat_hyphens(sentence)
     return capitalize_i(sentence)
 
 def postprocess_output(gen_question):
     gen_question = gen_question[:gen_question.find('?')+1]
     gen_question = first_letter_uppercase(gen_question)
     gen_question = reformat_punctuation(gen_question)
+    gen_question = reformat_hyphens(gen_question)
     return capitalize_i(gen_question)
