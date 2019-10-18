@@ -12,6 +12,23 @@ def first_letter_uppercase(text):
         text = text[0].upper() + text[1:]
     return text
 
+def fix_i_contractions(text):
+    mapping = [
+        ('im', "i'm"),
+        ('ive', "i've"),
+        ('i m', "i'm"),
+        ('i ve', "i've"),
+        ('i d', "i'd"),
+        ('i ll', "i'll"),
+    ]
+    mapping.extend(
+        [tuple(map(first_letter_uppercase, m)) for m in mapping])
+    for bad, good in mapping:
+        text = re.sub(r'^%s ' % bad, '%s ' % good, text)
+        text = re.sub(r' %s$' % bad, ' %s' % good, text)
+        text = text.replace(' %s ' % bad, ' %s ' % good)
+    return text
+
 def capitalize_i(text):
     """
     >>> capitalize_i('i think i will stay indoors')
@@ -103,6 +120,9 @@ def preprocess_input(text, preprocess_options):
         text = first_letter_lowercase(text)
     else:
         text = first_letter_uppercase(text)
+    # Fix "I" contractions
+    if preprocess_options['fix_i_contractions']:
+        text = fix_i_contractions(text)
     # Add or remove spaces adjacent to punctuation
     if preprocess_options['only_ending_spaces']:
         text = reformat_punctuation(text)

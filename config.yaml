@@ -10,6 +10,7 @@ preprocess:
   punctuation_spaces_for_questions: False
   only_ending_spaces: True
   hyphen_spaces: True
+  fix_i_contractions: True
 
 drop_non_ascii: True
 movie_drop_prob: 0.5

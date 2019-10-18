@@ -1,8 +1,9 @@
 import gpt_2_simple as gpt2
-from preprocess_utils import capitalize_i
 from preprocess_utils import first_letter_uppercase
 from preprocess_utils import reformat_punctuation
 from preprocess_utils import reformat_hyphens
+from preprocess_utils import fix_i_contractions
+from preprocess_utils import capitalize_i
 
 def compute_batch_size(nsamples):
     for batch_size in range(64, 0, -1):
@@ -24,16 +25,20 @@ def gpt2_gen_questions(sess, prefix, nsamples=1, temperature=0.7):
         gen_questions.append(postprocess_output(gen_question))
     return gen_questions
 
+def postprocess(text):
+    """Transform into well-formatted text."""
+    text = first_letter_uppercase(text)
+    text = reformat_punctuation(text)
+    text = reformat_hyphens(text)
+    text = fix_i_contractions(text)
+    text = capitalize_i(text)
+    return text
+
 def postprocess_input(sentence):
     """Reformat caption for readability."""
-    sentence = first_letter_uppercase(sentence)
-    sentence = reformat_punctuation(sentence)
-    sentence = reformat_hyphens(sentence)
-    return capitalize_i(sentence)
+    return postprocess(sentence)
 
 def postprocess_output(gen_question):
+    """Reformat question for readability."""
     gen_question = gen_question[:gen_question.find('?')+1]
-    gen_question = first_letter_uppercase(gen_question)
-    gen_question = reformat_punctuation(gen_question)
-    gen_question = reformat_hyphens(gen_question)
-    return capitalize_i(gen_question)
+    return postprocess(gen_question)
