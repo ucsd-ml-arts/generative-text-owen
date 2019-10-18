@@ -2,7 +2,7 @@
 git submodule init
 git submodule update
 cd vtensorflow/models/research/im2txt
-sudo python3 setup.py develop
+python3 setup.py develop --user
 cd -
 ./venv_setup.sh
 source ./visual-questioner-env/bin/activate

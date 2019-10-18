@@ -1,4 +1,5 @@
 # Create a virtual environment.
+pip install --user virtualenv
 virtualenv -p python3 ./visual-questioner-env
 
 # Activate the virtual environment.
@@ -23,6 +24,9 @@ pip install setuptools_scm
 # Install requests[security].
 pip install requests
 pip install 'requests[security]'
+
+# Install gsutil.
+pip install gsutil
 
 # Install correct versions of Python modules.
 pip install -r requirements.txt
