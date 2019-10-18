@@ -2,7 +2,7 @@ import subprocess
 import gpt_2_simple as gpt2
 
 import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.ERROR)
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 # Start afresh
 subprocess.call(['./cleanup.sh'])  # this will delete old models
