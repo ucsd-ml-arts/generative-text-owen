@@ -1,6 +1,7 @@
 import yaml
 import argparse
 import jsonlines
+import numpy as np
 from preprocess_utils import preprocess_input
 
 def is_ascii(text):
@@ -19,6 +20,7 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
     config = yaml.load(
         open('config.yaml', 'r'), Loader=yaml.FullLoader)
     preprocess_options = config['preprocess']
+    movie_drop_prob = config['movie_drop_prob']
 
     write_mode = 'a' if append else 'w'
     with jsonlines.open(in_path) as reader, open(out_path, write_mode) as writer:
@@ -35,8 +37,8 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
             if not q_text.endswith('?'):
                 q_text += '?'
             q_preprocess_options = preprocess_options.copy()
-            if q_preprocess_options['no_punctuation_spaces_for_questions']:
-                q_preprocess_options['punctuation_spaces'] = False
+            q_preprocess_options['punctuation_spaces'] = \
+                q_preprocess_options['punctuation_spaces_for_questions']
             q_text = preprocess_input(q_text, q_preprocess_options)
             # answer
             annotations = q_data['annotations']
@@ -49,6 +51,9 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
                 answer = parse_answer(q_data['document_text'], answer_candidates[-1])
             if config['drop_non_ascii'] and not is_ascii(answer):
                 continue
+            if any('movie' in text for text in (q_text, answer)):
+                if np.random.random() < movie_drop_prob:
+                    continue  # randomly drop Q/A pairs which contain the word "movie"
             if answer.startswith('<P>'):
                 # only accept paragraph answers
                 answer = answer.replace('<P>', '').replace('</P>', '')
