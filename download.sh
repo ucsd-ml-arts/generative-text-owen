@@ -1,10 +1,16 @@
+# Create a Python 2 virtual environment (necessary for gsutil).
+virtualenv -p python2 ./visual-questioner-py2-env
+source ./visual-questioner-py2-env/bin/activate
+
 # Download Natural Questions data.
 # Install gsutil according to https://cloud.google.com/storage/docs/gsutil_install.
 mkdir -p nq
+pip install gsutil
 gsutil -m cp -R gs://natural_questions/v1.0-simplified/simplified-nq-train.jsonl.gz nq/v1.0-simplified_simplified-nq-train.jsonl.gz
 cd nq
 gunzip v1.0-simplified_simplified-nq-train.jsonl.gz
 cd -
+deactivate
 
 # Download pre-trained im2txt models.
 mkdir -p im2txt; cd im2txt
@@ -15,9 +21,11 @@ tar -xvzf im2txt_2016_10_11.2000000.tar.gz
 rm im2txt_2016_10_11.2000000.tar.gz
 
 # Convert checkpoint.
+source ../visual-questioner-env/bin/activate
 cp ../vtensorflow/models/research/im2txt/convert_checkpoint.py .
 python3 convert_checkpoint.py
 cd -
 
 # Edit config file with current working directory.
 python3 update_config.py
+deactivate

@@ -25,8 +25,6 @@ pip install setuptools_scm
 pip install requests
 pip install 'requests[security]'
 
-# Install gsutil.
-pip install gsutil
-
 # Install correct versions of Python modules.
 pip install -r requirements.txt
+deactivate
