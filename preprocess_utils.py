@@ -12,6 +12,23 @@ def first_letter_uppercase(text):
         text = text[0].upper() + text[1:]
     return text
 
+def capitalize_i(text):
+    """
+    >>> capitalize_i('i think i will stay indoors')
+    'I think I will stay indoors'
+    >>> capitalize_i("i'll be coming around the mountain")
+    "I'll be coming around the mountain"
+    """
+    for s in ('i', "i'd", "i'll", "i'm", "i've"):
+        caps = first_letter_uppercase(s)
+        # beginning
+        text = re.sub(r'^%s ' % s, '%s ' % caps, text)
+        # end
+        text = re.sub(r' %s$' % s, ' %s' % caps, text)
+        # middle
+        text = text.replace(' %s ' % s, ' %s ' % caps)
+    return text
+
 def tokenize_punctuation(text):
     """Add spaces around punctuation.
     Inverse of `preprocess_utils.reformat_punctuation`.
@@ -76,4 +93,5 @@ def preprocess_input(text, preprocess_options):
         text = tokenize_punctuation(text)
     else:
         text = reformat_punctuation(text)
-    return text
+    # Capitalize "I"
+    return capitalize_i(text)

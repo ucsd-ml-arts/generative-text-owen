@@ -1,4 +1,5 @@
 import gpt_2_simple as gpt2
+from preprocess_utils import capitalize_i
 from preprocess_utils import first_letter_uppercase
 from preprocess_utils import reformat_punctuation
 
@@ -25,9 +26,11 @@ def gpt2_gen_questions(sess, prefix, nsamples=1, temperature=0.7):
 def postprocess_input(sentence):
     """Reformat caption for readability."""
     sentence = first_letter_uppercase(sentence)
-    return reformat_punctuation(sentence)
+    sentence = reformat_punctuation(sentence)
+    return capitalize_i(sentence)
 
 def postprocess_output(gen_question):
     gen_question = gen_question[:gen_question.find('?')+1]
     gen_question = first_letter_uppercase(gen_question)
-    return reformat_punctuation(gen_question)
+    gen_question = reformat_punctuation(gen_question)
+    return capitalize_i(gen_question)
