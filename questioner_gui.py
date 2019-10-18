@@ -1,7 +1,11 @@
 """
 Visual Questioner GUI.
+
 Image drag-and-drop based on
 https://benjaminirving.github.io/blog/2015/09/29/drag-and-drop-files-into-gui-using.
+
+Async processing based on
+https://www.learnpyqt.com/courses/concurrent-execution/multithreading-pyqt-applications-qthreadpool.
 """
 
 from __future__ import division, unicode_literals, print_function, absolute_import
@@ -10,6 +14,7 @@ import os
 import sys
 import yaml
 import platform
+import traceback
 from PySide2 import QtGui, QtCore, QtWidgets
 
 op_sys = platform.system()
@@ -23,6 +28,34 @@ from postprocess_utils import gpt2_gen_questions
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
+graph = None
+
+class WorkerSignals(QtCore.QObject):
+    finished = QtCore.Signal()
+    error = QtCore.Signal(tuple)
+    result = QtCore.Signal(str)
+
+class Worker(QtCore.QRunnable):
+    def __init__(self, fn, *args, **kwargs):
+        super(Worker, self).__init__()
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+
+    @QtCore.Slot()
+    def run(self):
+        try:
+            question = self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.result.emit(question)
+        finally:
+            self.signals.finished.emit()
+
 class WindowWidget(QtWidgets.QWidget):
     def __init__(self):
         super(WindowWidget, self).__init__()
@@ -30,6 +63,11 @@ class WindowWidget(QtWidgets.QWidget):
         self.captioner = None
         self.prepare_questioner()
         self.prepare_captioner()
+        self.threadpool = QtCore.QThreadPool()
+        self.questioner_running = False
+
+        global graph
+        graph = tf.get_default_graph()
 
         # Viewing region
         self.viewing_region = QtWidgets.QLabel(self)
@@ -75,20 +113,43 @@ class WindowWidget(QtWidgets.QWidget):
         self.captioner = Captioner(self.sess, checkpoint_path, vocab_file_path)
     
     def load_button_clicked(self):
-        image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file')
-        if image_path:
-            self.load_image(image_path)
+        if self.questioner_running:
+            print("Can't load an image right now. Questioner is busy.")
+        else:
+            image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file')
+            if image_path:
+                self.load_image(image_path)
     
     def load_image(self, image_path):
         pixmap = QtGui.QPixmap(image_path)
         pixmap = pixmap.scaled(500, 500, QtCore.Qt.KeepAspectRatio)
         self.viewing_region.setPixmap(pixmap)
+        self.text_region.setText('Questioner is working.')
 
-        caption = self.captioner.caption(image_path)
-        questions = gpt2_gen_questions(
-            self.sess, caption, nsamples=1, temperature=0.7)
-        if len(questions) > 0:
-            self.text_region.setText(questions[0])
+        self.questioner_running = True
+        worker = Worker(self.run_questioner, image_path)
+        worker.signals.finished.connect(self.questioner_finished)
+        worker.signals.error.connect(self.questioner_failed)
+        worker.signals.result.connect(self.apply_questioner_output)
+        self.threadpool.start(worker)
+
+    def run_questioner(self, image_path):
+        global graph
+        with graph.as_default():  # this is run on a separate thread
+            caption = self.captioner.caption(image_path)
+            questions = gpt2_gen_questions(
+                self.sess, caption, nsamples=1, temperature=0.7)
+            return questions[0] if len(questions) > 0 else ''
+
+    def questioner_finished(self):
+        self.questioner_running = False
+
+    def questioner_failed(self, e):
+        print(e)
+
+    def apply_questioner_output(self, question):
+        if len(question) > 0:
+            self.text_region.setText(question)
     
     def dragEnterEvent(self, evt):
         if evt.mimeData().hasUrls:
@@ -103,7 +164,7 @@ class WindowWidget(QtWidgets.QWidget):
             evt.ignore()
     
     def dropEvent(self, evt):
-        if evt.mimeData().hasUrls:
+        if evt.mimeData().hasUrls and not self.questioner_running:
             evt.setDropAction(QtCore.Qt.CopyAction)
             evt.accept()
             for url in evt.mimeData().urls():
