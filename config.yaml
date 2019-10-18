@@ -8,7 +8,7 @@ preprocess:
   lowercase: True
   punctuation_spaces: False
   only_ending_spaces: True
-  punctuation_spaces_except_questions: False
+  no_punctuation_spaces_for_questions: False
 
 drop_non_ascii: True
 drop_punctuated_questions: True

@@ -35,7 +35,7 @@ def process_nq_data(in_path, out_path='nq_data.txt', limit=float('inf'), append=
             if not q_text.endswith('?'):
                 q_text += '?'
             q_preprocess_options = preprocess_options.copy()
-            if q_preprocess_options['punctuation_spaces_except_questions']:
+            if q_preprocess_options['no_punctuation_spaces_for_questions']:
                 q_preprocess_options['punctuation_spaces'] = False
             q_text = preprocess_input(q_text, q_preprocess_options)
             # answer

@@ -8,5 +8,6 @@ __pycache__/
 !vtensorflow/models/
 images/
 visual-questioner-env/
+visual-questioner-py2-env/
 cookies.txt
 nq/
