@@ -125,6 +125,7 @@ class WindowWidget(QtWidgets.QWidget):
         pixmap = pixmap.scaled(500, 500, QtCore.Qt.KeepAspectRatio)
         self.viewing_region.setPixmap(pixmap)
         self.text_region.setText('Questioner is working.')
+        self.adjustSize()
 
         self.questioner_running = True
         worker = Worker(self.run_questioner, image_path)
