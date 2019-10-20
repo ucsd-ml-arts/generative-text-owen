@@ -27,6 +27,7 @@ It is processed and written to a `.txt` file by `gen_nq_data.py` (see the [Data 
 
 There are a lot of files, but you will only need to interact with a few of them.
 Those front-facing files are described below. Note that I have only tested the code with Python 3.6/3.7.
+Also, you may want to take a look at the [usage writeup](USAGE.md).
 
 ### Setup
 As setup, you will need to initialize the submodules, install dependencies, and download external
@@ -70,13 +71,37 @@ artistic vision for the project, in which the program would ask its questions al
 
 ## Technical Notes
 
-Any implementation details or notes we need to repeat your work.
-- Does this code require other pip packages, software, etc?
-- Does it run on some other (non-datahub) platform? (CoLab, etc.)
+- pip dependencies are listed in [`requirements.txt`](requirements.txt).
+- As previously mentioned, the project has been tested with Python 3.6 on Ubuntu 18.04 and Python 3.7 on Jupyterhub.
+- To run the vocal UI, pass the `--voice` flag to `questioner_gui.py`. You will need a GPU.
 
 ## Extensions
 
 I had a few other ideas that I didn't get around to implementing.
+
+#### Visual Attention
+In the questioner interface, I thought it would be interesting to highlight what the
+computer is looking at, according to attention from the captioning model. The code from the
+[TensorFlow captioning tutorial](https://www.tensorflow.org/tutorials/text/image_captioning)
+would have allowed easy access to this information.
+
+#### Better Question Generation
+(My full project proposal idea.) At each step of the GPT-2 sequence generation process, I would
+
+1. Generate an embedding of the image, using either an intermediate stage of a captioning system or an autoencoder.
+2. Concatenate the embedding along the feature dimension to the "token + position" embedding of the GPT-2 input pipeline.
+3. Use this as the input to predict the next word of a question.
+
+The output would be a question because I would include a discriminator to distinguish questions from non-questions,
+and train that discriminator alongside the GPT-2 question generator in a GAN framework (so that the GPT-2 generator
+would ultimately learn to only output question-type sentences). Additionally, in architecting the image encoder, I
+would apply attention over the image so that the GPT-2 model would be able to attend to precise visual sectors while
+generating a question. The final piece of the puzzle, which would encourage the questions to be relevant (in the
+English language) to the images themselves, would be cycle consistency: if information were preserved after going
+from image to question, we ought to be able to return successfully from question to [the relevant part of] the image.
+The discriminator corresponding to the "question -> image" direction would not only measure the image reconstruction
+loss, but also caption the resulting image and enforce that the caption was from the same distribution as captions
+from the same part of the original image.
 
 ## References
 
