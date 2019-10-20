@@ -17,8 +17,8 @@ preprocess:
   only_ending_spaces: True
   hyphen_spaces: True
   fix_i_contractions: True
-  capitalize_misc: True
+  capitalize_misc: False
 
 drop_non_ascii: True
-movie_drop_prob: 0.75
+movie_drop_prob: 0.8
 drop_punctuated_questions: True

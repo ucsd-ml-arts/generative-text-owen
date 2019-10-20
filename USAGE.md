@@ -20,6 +20,7 @@ source ./visual-questioner-env/bin/activate
   - Run [this code](https://github.com/tensorflow/models/issues/466#issuecomment-391240675) to fix the checkpoint.
 - Download the simplified training set from the [Natural Questions dataset](https://ai.google.com/research/NaturalQuestions/download).
 - Download the [pre-trained voice cloning models](https://github.com/CorentinJ/Real-Time-Voice-Cloning/wiki/Pretrained-models).
+- Download [`male.txt`](https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/male.txt) and [`female.txt`](https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/female.txt) and put them in the `<project root>/names/` directory.
 - Edit `config.yaml`.
 
 ## 3. Data Generation
