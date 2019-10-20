@@ -1,8 +1,14 @@
 # CHANGE ME
 project_root_dir: /home/owen/workspace/visual-questioner
 
+# Captioner
 checkpoint_path: im2txt/model.ckpt-2000000
 vocab_file_path: im2txt/word_counts.txt
+
+# TTS
+syn_model_dir: voicecloning/synthesizer/saved_models/logs-pretrained/
+voc_model_fpath: voicecloning/vocoder/saved_models/pretrained/pretrained.pt
+embed_fpath: embeddings/youthful.joblib
 
 preprocess:
   lowercase: True
@@ -13,5 +19,5 @@ preprocess:
   fix_i_contractions: True
 
 drop_non_ascii: True
-movie_drop_prob: 0.5
+movie_drop_prob: 0.75
 drop_punctuated_questions: True

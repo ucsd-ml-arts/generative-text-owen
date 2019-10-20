@@ -21,6 +21,7 @@ op_sys = platform.system()
 if op_sys == 'Darwin':
     from Foundation import NSURL
 
+from tts import TTS
 import gpt_2_simple as gpt2
 from captioner import Captioner
 from postprocess_utils import gpt2_gen_questions
@@ -69,6 +70,8 @@ class WindowWidget(QtWidgets.QWidget):
         global graph
         graph = tf.get_default_graph()
 
+        self.tts = TTS()
+
         # Viewing region
         self.viewing_region = QtWidgets.QLabel(self)
         layout = QtWidgets.QHBoxLayout()
@@ -85,6 +88,12 @@ class WindowWidget(QtWidgets.QWidget):
         self.instr_region.setText('Or drop an image onto this window.')
         right_sidebar.addWidget(self.instr_region)
         right_sidebar.addStretch()
+
+        # Progress bar
+        self.progress = QtWidgets.QProgressBar(self)
+        self.progress.setMaximum(100)
+        right_sidebar.addWidget(self.progress)
+        self.progress.hide()
 
         # Text region
         self.text_region = QtWidgets.QLabel(self)
@@ -151,6 +160,13 @@ class WindowWidget(QtWidgets.QWidget):
     def apply_questioner_output(self, question):
         if len(question) > 0:
             self.text_region.setText(question)
+            self.progress.show()
+            self.tts.speak(question, self.tts_callback)
+            self.progress.hide()
+
+    def tts_callback(self, i, seq_len, batch_size, gen_rate):
+        percentage = i * 100 / seq_len
+        self.progress.setValue(percentage)
     
     def dragEnterEvent(self, evt):
         if evt.mimeData().hasUrls:

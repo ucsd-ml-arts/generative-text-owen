@@ -1,3 +1,6 @@
 [submodule "vtensorflow/models"]
 	path = vtensorflow/models
 	url = https://github.com/visual-questioner/models.git
+[submodule "voicecloning"]
+	path = voicecloning
+	url = https://github.com/visual-questioner/Real-Time-Voice-Cloning.git

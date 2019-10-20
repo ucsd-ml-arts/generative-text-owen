@@ -12,6 +12,18 @@ gunzip v1.0-simplified_simplified-nq-train.jsonl.gz
 cd -
 deactivate
 
+# Download pre-trained voice cloning models.
+code=$(wget --save-cookies cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1n1sPXvT34yXFLT47QZA6FIRGrwMeSsZc' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+wget -O pretrained.zip --load-cookies cookies.txt "https://docs.google.com/uc?export=download&confirm=${code}&id=1n1sPXvT34yXFLT47QZA6FIRGrwMeSsZc"
+unzip pretrained.zip
+mv encoder/saved_models voicecloning/encoder
+mv synthesizer/saved_models voicecloning/synthesizer
+mv vocoder/saved_models voicecloning/vocoder
+rmdir encoder
+rmdir synthesizer
+rmdir vocoder
+rm pretrained.zip
+
 # Download pre-trained im2txt models.
 mkdir -p im2txt; cd im2txt
 wget -O word_counts.txt "https://docs.google.com/uc?export=download&id=0B0tqC1h-STWAYXlEMV9uZUZ2d28"

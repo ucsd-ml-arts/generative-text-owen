@@ -1,9 +1,11 @@
 # 1
 git submodule init
 git submodule update
-cd vtensorflow/models/research/im2txt
-python3 setup.py develop --user
-cd -
+for module_path in vtensorflow/models/research/im2txt voicecloning; do
+    cd ${module_path}
+    python3 setup.py develop --user
+    cd -
+done
 ./venv_setup.sh
 
 # 2

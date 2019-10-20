@@ -7,6 +7,9 @@ git submodule update
 cd vtensorflow/models/research/im2txt
 sudo python3 setup.py develop
 cd -
+cd voicecloning
+sudo python3 setup.py develop
+cd -
 ./venv_setup.sh
 source ./visual-questioner-env/bin/activate
 ```
@@ -16,6 +19,7 @@ source ./visual-questioner-env/bin/activate
   - Put all files in the `<project root>/im2txt/` directory.
   - Run [this code](https://github.com/tensorflow/models/issues/466#issuecomment-391240675) to fix the checkpoint.
 - Download the simplified training set from the [Natural Questions dataset](https://ai.google.com/research/NaturalQuestions/download).
+- Download the [pre-trained voice cloning models](https://github.com/CorentinJ/Real-Time-Voice-Cloning/wiki/Pretrained-models).
 - Edit `config.yaml`.
 
 ## 3. Data Generation
