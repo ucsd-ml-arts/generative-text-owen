@@ -21,3 +21,5 @@ inflect==2.1.0
 PyQt5==5.13.1
 multiprocess==0.70.9
 numba==0.46.0
+torch==1.1.0
+torchvision==0.3.0
