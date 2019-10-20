@@ -1,5 +1,7 @@
 import re
 
+misc = {}
+
 def first_letter_lowercase(text):
     if len(text) > 0:
         text = text.strip()
@@ -45,6 +47,31 @@ def capitalize_i(text):
         # middle
         text = text.replace(' %s ' % s, ' %s ' % caps)
     return text
+
+def capitalize_misc(text):
+    """Capitalize names, honorifics, etc.
+
+    >>> capitalize_misc('Today, dr. gary said hello to mary.')
+    'Today, Dr. Gary said hello to Mary.'
+    """
+    global misc
+    if not misc:
+        misc  = set(line.strip().lower() for line in open('names/male.txt'))
+        misc |= set(line.strip().lower() for line in open('names/female.txt'))
+        misc |= {'mr', 'mrs', 'ms', 'dr'}
+    words = text.split(' ')
+    for i in range(len(words)):
+        w = words[i]
+        start_str, end_str = '', ''
+        while w.startswith(("'", '"', '(')):
+            start_str = start_str + w[0]
+            w = w[1:]
+        while w.endswith(('.', "'", ',', ';', ':', '?', ')', '"')):
+            end_str = w[-1] + end_str
+            w = w[:-1]
+        if w in misc:
+            words[i] = start_str + first_letter_uppercase(w) + end_str
+    return ' '.join(words)
 
 def tokenize_punctuation(text):
     """Add spaces around punctuation.
@@ -136,5 +163,8 @@ def preprocess_input(text, preprocess_options):
         text = tokenize_hyphens(text)
     else:
         text = reformat_hyphens(text)
+    # Capitalize misc
+    if preprocess_options['capitalize_misc']:
+        text = capitalize_misc(text)
     # Capitalize "I"
     return capitalize_i(text)

@@ -24,6 +24,13 @@ rmdir synthesizer
 rmdir vocoder
 rm pretrained.zip
 
+# Download lists of names.
+mkdir -p names
+wget -O names/male.txt "https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/male.txt"
+wget -O names/female.txt "https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/female.txt"
+sed -i -e 1,6d names/male.txt
+sed -i -e 1,6d names/female.txt
+
 # Download pre-trained im2txt models.
 mkdir -p im2txt; cd im2txt
 wget -O word_counts.txt "https://docs.google.com/uc?export=download&id=0B0tqC1h-STWAYXlEMV9uZUZ2d28"
