@@ -13,6 +13,7 @@ from __future__ import division, unicode_literals, print_function, absolute_impo
 import os
 import sys
 import yaml
+import argparse
 import platform
 import traceback
 from PySide2 import QtGui, QtCore, QtWidgets
@@ -58,7 +59,7 @@ class Worker(QtCore.QRunnable):
             self.signals.finished.emit()
 
 class WindowWidget(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, voice):
         super(WindowWidget, self).__init__()
         self.sess = None
         self.captioner = None
@@ -66,11 +67,15 @@ class WindowWidget(QtWidgets.QWidget):
         self.prepare_captioner()
         self.threadpool = QtCore.QThreadPool()
         self.questioner_running = False
+        self.applying_output = False
 
         global graph
         graph = tf.get_default_graph()
 
-        self.tts = TTS()
+        if voice:
+            self.tts = TTS()
+        else:
+            self.tts = None
 
         # Viewing region
         self.viewing_region = QtWidgets.QLabel(self)
@@ -122,7 +127,7 @@ class WindowWidget(QtWidgets.QWidget):
         self.captioner = Captioner(self.sess, checkpoint_path, vocab_file_path)
     
     def load_button_clicked(self):
-        if self.questioner_running:
+        if self.questioner_running or self.applying_output:
             print("Can't load an image right now. Questioner is busy.")
         else:
             image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file')
@@ -158,11 +163,14 @@ class WindowWidget(QtWidgets.QWidget):
         print(e)
 
     def apply_questioner_output(self, question):
+        self.applying_output = True
         if len(question) > 0:
             self.text_region.setText(question)
-            self.progress.show()
-            self.tts.speak(question, self.tts_callback)
-            self.progress.hide()
+            if self.tts:
+                self.progress.show()
+                self.tts.speak(question, self.tts_callback)
+                self.progress.hide()
+        self.applying_output = False
 
     def tts_callback(self, i, seq_len, batch_size, gen_rate):
         percentage = i * 100 / seq_len
@@ -181,7 +189,9 @@ class WindowWidget(QtWidgets.QWidget):
             evt.ignore()
     
     def dropEvent(self, evt):
-        if evt.mimeData().hasUrls and not self.questioner_running:
+        if evt.mimeData().hasUrls \
+                and not self.questioner_running \
+                and not self.applying_output:
             evt.setDropAction(QtCore.Qt.CopyAction)
             evt.accept()
             for url in evt.mimeData().urls():
@@ -194,6 +204,10 @@ class WindowWidget(QtWidgets.QWidget):
             evt.ignore()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--voice', '-v', action='store_true')
+    args = parser.parse_args()
+
     app = QtWidgets.QApplication(sys.argv)
-    _ = WindowWidget()
+    _ = WindowWidget(args.voice)
     sys.exit(app.exec_())
