@@ -37,7 +37,7 @@ class TTS:
         self.embed = [joblib.load(embed_fpath)]
         self.synthesizer.synthesize_spectrograms(['test 1'], self.embed)
 
-    def speak(self, text, progress_callback):
+    def speak(self, text, progress_callback, write_audio=False):
         try:
             spec = self.synthesizer.synthesize_spectrograms([text], self.embed)[0]
             generated_wav = vocoder.infer_waveform(spec, progress_callback=progress_callback)
@@ -45,5 +45,14 @@ class TTS:
                 generated_wav, (0, self.synthesizer.sample_rate), mode='constant')
             self.sd.stop()
             self.sd.play(generated_wav, self.synthesizer.sample_rate)
+            if write_audio:
+                import librosa
+                words = text.split()
+                fname = words[min(3, len(words) - 1)] or 'generated'
+                while len(fname) > 1 and not fname[-1].isalpha():
+                    fname = fname[:-1]
+                librosa.output.write_wav(fname + '.wav',
+                                         generated_wav.astype(np.float32),
+                                         self.synthesizer.sample_rate)
         except Exception as e:
             print('TTS exception: %s' % repr(e))
