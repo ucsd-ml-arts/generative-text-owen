@@ -76,6 +76,7 @@ Full disclosure: my results are cherry-picked.<br>
 For each image, I generated 100 questions and selected the most coherent ones.
 
 - [A `.txt` file containing examples of generated questions.](saved_questions.txt)
+- [An HTML page depicting the generated questions alongside their associated images.](https://owenjow.xyz/visual-questioner)
 
 <hr>
 

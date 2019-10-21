@@ -1,0 +1,30 @@
+* {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  padding: 20px;
+  margin-left: 1%;
+}
+
+@media screen and (min-width: 675px) {
+  #wrapper {
+    width: 650px;
+    margin: 0 auto;
+  }
+}
+
+div.clearfix {
+  padding: 5px;
+  overflow: auto;
+}
+
+.computer-typing {
+  color: gray;
+}
+
+img {
+  margin-left: 10px;
+}
