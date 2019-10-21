@@ -75,6 +75,8 @@ artistic vision for the project, in which the program would ask its questions al
 Full disclosure: my results are cherry-picked.<br>
 For each image, I generated 100 questions and selected the most coherent ones.
 
+[![Visual Questioner Demo](https://i.imgur.com/4w60PAx.png)](https://www.youtube.com/watch?v=EbVgxMv_zZU)
+
 - Documentation of your generative text in an effective form. A file with your generated text (.pdf, .doc, .txt).
 
 ## Technical Notes
