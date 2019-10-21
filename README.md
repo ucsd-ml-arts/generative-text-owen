@@ -92,7 +92,7 @@ Here is a recording of the GUI in action.
 
 - pip dependencies are listed in [`requirements.txt`](requirements.txt).
 - As previously mentioned, the project has been tested with Python 3.6 on Ubuntu 18.04 and Python 3.7 on Jupyterhub.
-- To run the vocal UI, pass the `--voice` flag to `questioner_gui.py`. You will need a GPU.
+- To run the speech synthesizer, pass the `--voice` flag to `questioner_gui.py`. You will need a GPU.
 
 ## Extensions
 
