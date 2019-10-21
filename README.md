@@ -19,7 +19,12 @@ to answers; I reverse the order of questions and answers in the training data so
 
 ## Model/Data
 
-- You can download the trained model from [TODO](#).
+- You can download the trained model from [Google Drive](https://drive.google.com/file/d/1LnOzIRPLEZcJGp0GNMQZSIEPwC8A8Qe-/view?usp=sharing).<br>
+It was created using the default config file and the following commands:
+```
+python3 gen_nq_data.py nq/v1.0-simplified_simplified-nq-train.jsonl -o nq_data_50k.txt -l 50000
+python3 train_gpt2_questioner.py -d nq_data_50k.txt -s 300
+```
 - The original source of my training data is Google's [Natural Questions dataset](https://ai.google.com/research/NaturalQuestions).
 It is processed and written to a `.txt` file by `gen_nq_data.py` (see the [Data Generation section](#data-generation)).
 
@@ -66,6 +71,9 @@ As far as I am aware, you can only do this locally (i.e. not on Jupyterhub). The
 artistic vision for the project, in which the program would ask its questions aloud and in a childlike voice.
 
 ## Results
+
+Full disclosure: my results are cherry-picked.<br>
+For each image, I generated 100 questions and selected the most coherent ones.
 
 - Documentation of your generative text in an effective form. A file with your generated text (.pdf, .doc, .txt).
 
