@@ -80,6 +80,10 @@ For each image, I generated 100 questions and selected the most coherent ones.
 
 <hr>
 
+[![](https://user-images.githubusercontent.com/8358648/67179922-cce45d80-f38c-11e9-89c8-7f4a4154c808.gif)](https://user-images.githubusercontent.com/8358648/67179922-cce45d80-f38c-11e9-89c8-7f4a4154c808.gif)
+
+<hr>
+
 Here is a recording of the GUI in action.
 
 [![Visual Questioner Demo](https://i.imgur.com/4w60PAx.png)](https://www.youtube.com/watch?v=EbVgxMv_zZU)
