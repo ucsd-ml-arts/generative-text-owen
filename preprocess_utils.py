@@ -142,6 +142,9 @@ def reformat_hyphens(text):
 def preprocess_input(text, preprocess_options):
     # Strip whitespace
     text = text.strip()
+    # The input (a description) must end in a period
+    if not text.endswith('.'):
+        text = text + '.'
     # Convert first letter to lower/uppercase
     if preprocess_options['lowercase']:
         text = first_letter_lowercase(text)

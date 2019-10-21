@@ -48,3 +48,7 @@ cd -
 # Edit config file with current working directory.
 python3 update_config.py
 deactivate
+
+# Get sample image.
+mkdir -p images
+cp vtensorflow/models/research/im2txt/g3doc/COCO_val2014_000000224477.jpg images/water.jpg
