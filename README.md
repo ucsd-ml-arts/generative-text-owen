@@ -86,7 +86,7 @@ For each image, I generated 100 questions and selected the most coherent ones.
 
 Here is a recording of the GUI in action.
 
-[![Visual Questioner Demo](https://i.imgur.com/4w60PAx.png)](https://www.youtube.com/watch?v=EbVgxMv_zZU)
+[![Visual Questioner Demo](https://i.imgur.com/4w60PAx.png)](https://www.youtube.com/watch?v=xI02ViXsUk8)
 
 ## Technical Notes
 
